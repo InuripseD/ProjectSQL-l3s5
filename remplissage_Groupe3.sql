@@ -11,6 +11,7 @@ Effacer les anciennes valeurs des relations
 prompt -------------------------------------------;
 prompt --- Suppression des anciens tuples --------;
 prompt -------------------------------------------;
+
 DELETE FROM TRANSFUSE;
 DELETE FROM TRAITE;
 DELETE FROM DON;
@@ -24,6 +25,10 @@ DELETE FROM PERSONNE;
 prompt -------------------------------------------;
 prompt --- Insertion des nouveaux tuples ---------;
 prompt -------------------------------------------;
+
+/*
+Creer une fonctions pour insert à la place des insertinto
+*/
 
 prompt ------------------------------------------;
 prompt ---------- insertion DONNEUR -------------;
