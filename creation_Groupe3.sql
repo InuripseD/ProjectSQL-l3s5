@@ -2,10 +2,9 @@
 L3 GROUPE B - PROJET DON DE SANG GROUPE 3 -
 */
 /*
-Numéro de carte étudiant : 
-Nom : 
-Prénom : 
-Date : 
+Numéro de carte étudiant : 22020352
+Nom : DJUNAEDI
+Prénom : Rendra
 */
 /*
 Numéro de carte étudiant : 
