@@ -34,4 +34,35 @@ prompt ------------------------------------------;
 prompt ---------- insertion DONNEUR -------------;
 prompt ------------------------------------------;
 
-INSERT INTO DONNEUR VALUES ();
+
+
+prompt ------------------------------------------;
+prompt ---------- insertion HOPITAL -------------;
+prompt ------------------------------------------;
+
+INSERT INTO HOPITAL VALUES (1,'Hôpital Lapeyronie','371 Av. du Doyen Gaston Giraud');
+INSERT INTO HOPITAL VALUES (2,'Polyclinique Pasteur','3 Rue Pasteur, 34120 Pézenas');
+INSERT INTO HOPITAL VALUES (3,'Polyclinique des Trois Vallees','4 Rte de Saint-Pons, 34600 Bédarieux');
+INSERT INTO HOPITAL VALUES (4,'Hôpital Privé Arnault Tzanck Mougins Sophia Antipolis','122 Av. Maurice Donat, 06250 Mougins');
+INSERT INTO HOPITAL VALUES (5,'Hôpital privé La Louvière - Ramsay Santé','69 Rue de la Louvière, 59800 Lille');
+INSERT INTO HOPITAL VALUES (6,'Hôpital Privé Saint-François','62 Rue Saint-François, 57535 Marange-Silvange');
+INSERT INTO HOPITAL VALUES (7,'Hôpital Suisse de Paris ','10 Rue Minard, 92130 Issy-les-Moulineaux');
+INSERT INTO HOPITAL VALUES (8,'Hôpital Albert Schweitzer','201 Av. d Alsace, 68000 Colmar');
+INSERT INTO HOPITAL VALUES (9,'Centre Hospitalier St-Marcellin','1 Av. Félix Faure, 38160 Saint-Marcellin');
+INSERT INTO HOPITAL VALUES (10,'Clinique Médipôle Garonne','45 Rue de Gironis, 31036 Toulouse');
+
+
+prompt ------------------------------------------;
+prompt ---------- insertion COLLECTE -------------;
+prompt ------------------------------------------;
+
+INSERT INTO COLLECTE VALUES (1,'10-03-2020','30-03-2020','30, Faculté des Sciences de Montpellier, Place E. Bataillon, 34095 Montpellier','NORMAL');
+INSERT INTO COLLECTE VALUES (2,'30-03-2020','15-04-2020','22 Av. Président Doumer, 66000 Perpignan','URGENT');
+INSERT INTO COLLECTE VALUES (3,'30-03-2020','15-04-2020',' 3 Av. Dr Ecoiffier, 66300 Thuir','NORMAL');
+INSERT INTO COLLECTE VALUES (4,'17-06-2020','30-06-2020','201 Av. d Alsace, 68000 Colmar','URGENT');
+INSERT INTO COLLECTE VALUES (5,'03-01-2019','18-01-2019','Rte de Mende, 34090 Montpellier','NORMAL');
+INSERT INTO COLLECTE VALUES (6,'03-01-2019','18-01-2019','52 Av. Paul Alduy, 66100 Perpignan','NORMAL');
+INSERT INTO COLLECTE VALUES (7,'25-02-2019','08-03-2019','45 Rue de Gironis, 31036 Toulouse','NORMAL');
+INSERT INTO COLLECTE VALUES (8,'13-05-2019','31-05-2019','118 Rte de Narbonne, 31062 Toulouse','NORMAL');
+INSERT INTO COLLECTE VALUES (9,'08-08-2020','22-08-2020','7 Pl. Gabriel Péri, 30000 Nîmes','URGENT');
+INSERT INTO COLLECTE VALUES (10,'08-08-2020','22-08-2020','10 Rue Tréfilerie, 42100 Saint-Étienne','NORMAL');
