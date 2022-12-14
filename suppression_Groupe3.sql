@@ -24,9 +24,12 @@ prompt -------------------------------------------;
 prompt -------- Suppression des objects ----------;
 prompt -------------------------------------------;
 
-DROP OBJECT Insert_donneur;
-DROP OBJECT Insert_patient;
-DROP OBJECT Insert_personnel;
+DROP TRIGGER INSERT_DONNEUR;
+DROP TRIGGER INSERT_PATIENT;
+DROP TRIGGER INSERT_PERSONNEL;
+DROP TRIGGER CHECK_VALID_DON;
+
+DROP FUNCTION GET_INDEX;
 
 prompt -------------------------------------------;
 prompt ---    Suppression des relations   --------;
