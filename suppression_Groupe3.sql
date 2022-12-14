@@ -12,9 +12,22 @@ DELETE FROM PERSONNEL;
 DELETE FROM DONNEUR;
 DELETE FROM PERSONNE;
 
-/*
-SUPPRESSION DES RELATIONS (NORMALEMENT AVEC BON ORDRE)
-*/
+prompt -------------------------------------------;
+prompt --------- Suppression des views -----------;
+prompt -------------------------------------------;
+
+DROP VIEW ALL_DONNEURS;
+DROP VIEW ALL_PATIENTS;
+DROP VIEW ALL_PERSONNELS;
+
+prompt -------------------------------------------;
+prompt -------- Suppression des objects ----------;
+prompt -------------------------------------------;
+
+DROP OBJECT Insert_donneur;
+DROP OBJECT Insert_patient;
+DROP OBJECT Insert_personnel;
+
 prompt -------------------------------------------;
 prompt ---    Suppression des relations   --------;
 prompt -------------------------------------------;
@@ -110,6 +123,3 @@ EXCEPTION
 END;
 /
 
-/*
-*************************************************
-*/
