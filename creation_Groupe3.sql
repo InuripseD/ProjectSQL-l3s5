@@ -170,6 +170,14 @@ BEGIN
 END Insert_personnel;
 /
 
+CREATE OR REPLACE TRIGGER Check_valid_don
+    AFTER INSERT ON TRAITE
+BEGIN
+    IF (VALIDITE = 'NON_VALIDE') THEN
+        DBMS_OUTPUT.PUT_LINE('Don non valide, un message est envoyé au donneur');
+    END IF;
+END Check_valid_don;
+/
 /*
 CREATE OR REPLACE PROCEDURE INSERT_INTO_DONNEUR
     ( NUMERO PERSONNE.NUM_PERSO%TYPE, 
