@@ -91,7 +91,7 @@ prompt ------------------------------------------;
 prompt -------- insertion TRANSFUSION -----------;
 prompt ------------------------------------------;
 
-INSERT INTO TRANSFUSE VALUES (10,14,'30-03-2020');
+INSERT INTO TRANSFUSE VALUES (10,14,2,'30-03-2020');
 INSERT INTO TRANSFUSE VALUES (2,18,1,'15-04-2020');
 INSERT INTO TRANSFUSE VALUES (3,17,2,'15-04-2020');
 INSERT INTO TRANSFUSE VALUES (5,21,5,'30-06-2020');
