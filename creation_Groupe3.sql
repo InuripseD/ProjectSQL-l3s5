@@ -205,14 +205,18 @@ BEGIN
 END Check_valid_don;
 /
 
+CREATE OR REPLACE PROCEDURE SELECT_TRANFUSIONS(
+    
+)
+
 /*
-CREATE OR REPLACE PROCEDURE INSERT_INTO_DONNEUR
-    ( NUMERO PERSONNE.NUM_PERSO%TYPE, 
-      NOM PERSONNE.NOM%TYPE, 
-      PRENOM PERSONNE.PRENOM%TYPE, 
-      CONTACT PERSONNE%TYPE, 
-      AGE PERSONNE%TYPE, 
-      EMAIL DONNEUR.EMAIL%TYPE) IS
+CREATE OR REPLACE PROCEDURE INSERT_INTO_DONNEUR( 
+    NUMERO PERSONNE.NUM_PERSO%TYPE, 
+    NOM PERSONNE.NOM%TYPE, 
+    PRENOM PERSONNE.PRENOM%TYPE, 
+    CONTACT PERSONNE%TYPE, 
+    AGE PERSONNE%TYPE, 
+    EMAIL DONNEUR.EMAIL%TYPE) IS
 BEGIN
     INSERT INTO PERSONNE(NUMERO, NOM, PRENOM, CONTACT, AGE);
     INSERT INTO DONNEUR(NUMERO, EMAIL);
@@ -223,23 +227,24 @@ END;
 
 /*
 CREATE OR REPLACE PROCEDURE Insert_donneur(
-    p_nom IN VARCHAR(15), 
-    p_prenom IN VARCHAR(20), 
-    p_contact IN INT, 
-    p_age IN NUMERIC(3,0), 
-    p_email IN VARCHAR(30))
+    p_nom IN VARCHAR(32), 
+    p_prenom IN VARCHAR(32), 
+    p_contact IN NUMERIC(10,0), 
+    p_date_naissance IN DATE, 
+    p_fonction IN VARCHAR(32),
+    p_date_anciennete IN DATE)
 IS
-    p_numero NUMBER;
+    NUM_INDEX INTEGER;
 BEGIN
-    SELECT MAX(NUM_PERSO) INTO p_numero FROM PERSONNE;
-    p_numero := p_numero + 1
-    INSERT INTO PERSONNE VALUES (p_numero, p_nom, p_prenom, p_contact, p_age);
-    INSERT INTO DONNEUR VALUES (p_numero, p_email);
+    NUM_INDEX = Get_index();
+    INSERT INTO PERSONNE (NUM_PERSO, NOM, PRENOM, CONTACT, DATE_NAISSANCE) VALUES (NUM_INDEX, p_nom, p_prenom, p_contact, p_date_naissance);
+    INSERT INTO PERSONNEL (NUM_PERSONNEL,FONCTION,DATE_ANCIENNETE) VALUES (NUM_INDEX, p_fonction, p_date_anciennete);
+    COMMIT;
 END;
 /
 
 BEGIN
-    Insert_donneur('Durant','Pierro',0101010212,32,'durant.p@umontpellier.fr');
+    Insert_donneur('Durant','Pierro',0101010212,'12-06-1998','Stagiaire','05-10-2022');
 END;
 /
 */
