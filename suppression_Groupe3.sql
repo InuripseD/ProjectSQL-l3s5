@@ -1,6 +1,24 @@
+prompt -------------------------------------------;
+prompt --- Suppression des anciens tuples --------;
+prompt -------------------------------------------;
+
+DELETE FROM TRANSFUSE;
+DELETE FROM TRAITE;
+DELETE FROM DON;
+DELETE FROM COLLECTE;
+DELETE FROM HOPITAL;
+DELETE FROM PATIENT;
+DELETE FROM PERSONNEL;
+DELETE FROM DONNEUR;
+DELETE FROM PERSONNE;
+
 /*
 SUPPRESSION DES RELATIONS (NORMALEMENT AVEC BON ORDRE)
 */
+prompt -------------------------------------------;
+prompt ---    Suppression des relations   --------;
+prompt -------------------------------------------;
+
 prompt "Suppression des relations"
 BEGIN
 EXECUTE IMMEDIATE 'DROP TABLE TRANSFUSE CASCADE CONSTRAINTS';
