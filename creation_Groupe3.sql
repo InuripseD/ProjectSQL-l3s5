@@ -99,6 +99,13 @@ CREATE TABLE TRANSFUSE (
     FOREIGN KEY (CODE_H) REFERENCES HOPITAL (CODE_HOPITAL) ON DELETE CASCADE
 );
 
+CREATE TABLE MSG_REFUS (
+    ID_MSG NUMERIC(10,0),
+    ID_D NUMERIC(10,0),
+    CONSTRAINT ID_MSG PRIMARY KEY (ID_MSG),
+    FOREIGN KEY (ID_D) REFERENCES DON (ID_DON) ON DELETE CASCADE
+);
+
 prompt -------------------------------------------;
 prompt ---------- Creation des views! ------------;
 prompt -------------------------------------------;
@@ -134,6 +141,21 @@ BEGIN
         NUM_INDEX := NUM_INDEX + 1;
     END IF;
     RETURN (NUM_INDEX);
+END;
+/
+
+CREATE OR REPLACE FUNCTION Get_index_MSG
+RETURN INTEGER IS
+    MSG_INDEX INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO MSG_INDEX FROM MSG_REFUS;
+    IF MSG_INDEX = 0 THEN
+        MSG_INDEX := 1;
+    ELSE
+        SELECT MAX(ID_MSG) INTO MSG_INDEX FROM MSG_REFUS;
+        MSG_INDEX := MSG_INDEX + 1;
+    END IF;
+    RETURN (MSG_INDEX);
 END;
 /
 
@@ -173,9 +195,13 @@ END Insert_personnel;
 /*
 CREATE OR REPLACE TRIGGER Check_valid_don
     AFTER INSERT ON TRAITE
+    FOR EACH ROW
+DECLARE
+    MSG_INDEX INTEGER;
 BEGIN
-    IF NEW.VALIDITE NOT IN ('VALIDE') THEN
-        DBMS_OUTPUT.PUT_LINE('Don non valide, un message est envoyé au donneur');
+    MSG_INDEX := Get_index_MSG();
+    IF(:NEW.VALIDITE = 'NON_VALIDE') THEN
+       INSERT INTO MSG_REFUS VALUES (MSG_INDEX, :NEW.ID_D);
     END IF;
 END Check_valid_don;
 /

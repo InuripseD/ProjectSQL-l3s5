@@ -11,6 +11,7 @@ DELETE FROM PATIENT;
 DELETE FROM PERSONNEL;
 DELETE FROM DONNEUR;
 DELETE FROM PERSONNE;
+DELETE FROM MSG_REFUS;
 
 prompt -------------------------------------------;
 prompt --------- Suppression des views -----------;
@@ -30,6 +31,7 @@ DROP TRIGGER INSERT_PERSONNEL;
 DROP TRIGGER CHECK_VALID_DON;
 
 DROP FUNCTION GET_INDEX;
+DROP FUNCTION Get_index_MSG;
 
 prompt -------------------------------------------;
 prompt ---    Suppression des relations   --------;
@@ -126,3 +128,12 @@ EXCEPTION
 END;
 /
 
+BEGIN
+EXECUTE IMMEDIATE 'DROP TABLE MSG_REFUS CASCADE CONSTRAINTS';
+EXCEPTION
+ WHEN OTHERS THEN
+	IF SQLCODE != -942 THEN
+	RAISE;
+	END IF;
+END;
+/
