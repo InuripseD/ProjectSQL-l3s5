@@ -31,6 +31,7 @@ DROP TRIGGER INSERT_PERSONNEL;
 DROP TRIGGER CHECK_VALID_DON;
 
 DROP FUNCTION GET_INDEX;
+DROP FUNCTION Get_index_MSG;
 
 prompt -------------------------------------------;
 prompt ---    Suppression des relations   --------;
