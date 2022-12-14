@@ -13,6 +13,22 @@ prompt ------------------------------------------;
 prompt ---------- insertion DONNEUR -------------;
 prompt ------------------------------------------;
 
+INSERT INTO ALL_DONNEURS(NOM, PRENOM, CONTACT, DATE_NAISSANCE, EMAIL) VALUES ('Durant','Pierro',0432658594,'16-09-1982','durant.p@umontpellier.fr');
+/*
+INSERT INTO ALL_DONNEURS VALUES(5,'MARTIN','Martin',0756548595,'05-05-2001','martintiktok@mail.fr');
+*/
+
+prompt ------------------------------------------;
+prompt ---------- insertion PATIENT -------------;
+prompt ------------------------------------------;
+
+INSERT INTO ALL_PATIENTS VALUES(2,'DONT LA','Claire',0636600236,'29-01-1998','A+');
+
+prompt ------------------------------------------;
+prompt --------- insertion PERSONNEL ------------;
+prompt ------------------------------------------;
+
+INSERT INTO ALL_PERSONNELS VALUES(3,'LAMARCHE','Diego',0636600236,'08-11-1996','Infirmier','10-06-2015');
 
 prompt ------------------------------------------;
 prompt ---------- insertion HOPITAL -------------;
