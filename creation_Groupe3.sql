@@ -192,7 +192,6 @@ BEGIN
 END Insert_personnel;
 /
 
-/*
 CREATE OR REPLACE TRIGGER Check_valid_don
     AFTER INSERT ON TRAITE
     FOR EACH ROW
@@ -205,7 +204,6 @@ BEGIN
     END IF;
 END Check_valid_don;
 /
-*/
 
 /*
 CREATE OR REPLACE PROCEDURE INSERT_INTO_DONNEUR
