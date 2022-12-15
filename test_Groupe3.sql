@@ -66,6 +66,10 @@ HAVING COUNT(*) >= ALL (SELECT COUNT(*)
                         WHERE C1.ID_COLLECTE = C2.ID_COLLECTE 
                         GROUP BY T2.NUM_PER);
 
+prompt -------------------------------------------;
+prompt --- TESTS triggers/procedure/fonctions ----;
+prompt -------------------------------------------;
+
 prompt --- Utilisation de notre premier trigger. (Lorsqu'un traitement est NON_VALIDE alors on simule un envoie de message en inserant une ligne dans MSG_REFUS.) ---;
 
 prompt --- Table initial MSG_REFUS ---;
@@ -85,3 +89,13 @@ prompt --- Table TRAITE après notre Traitement, le traitement est tout de meme 
 SELECT * FROM TRAITE;
 
 prompt --- Fonction Get_index_MSG() et Get_index() pour savoir l'ID du prochain tuple de chaque table sont utilises dans les 2 triggers precedants. ---;
+
+prompt --- Maintenant utilisation de notre deuxieme trigger. (Lorsque l'on souhaite rentrer une personne/donneur/patient/personnel dans notre base on utilise nos Views.) ---;
+
+SELECT * FROM PERSONNEL;
+
+INSERT INTO ALL_PERSONNELS(NOM, PRENOM, CONTACT, DATE_NAISSANCE, FONCTION, DATE_ANCIENNETE) VALUES ('ANTOINE','Benoit',0753605050,'26-07-1987','Infirmier','01-05-2010');
+
+SELECT * FROM PERSONNEL;
+SELECT * FROM PERSONNE;
+
