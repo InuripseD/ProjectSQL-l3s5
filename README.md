@@ -1,7 +1,3 @@
-https://docs.google.com/document/d/1vbcbqvZPNH7nLveeizmyAZhd6issmrTYZsAAWsdnKkk/edit
-
-
-
 RAPPORT DE PROJET
 HAI502I GROUPE B
 
