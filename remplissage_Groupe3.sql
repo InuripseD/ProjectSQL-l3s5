@@ -92,8 +92,8 @@ INSERT INTO COLLECTE VALUES (7,'25-02-2013','08-03-2013','45 Rue de Gironis, 310
 INSERT INTO COLLECTE VALUES (8,'13-05-2019','31-05-2019','118 Rte de Narbonne, 31062 Toulouse','NORMAL');
 INSERT INTO COLLECTE VALUES (9,'08-08-2018','22-08-2018','7 Pl. Gabriel Peri, 30000 Nîmes','URGENT');
 INSERT INTO COLLECTE VALUES (10,'08-08-2020','22-08-2020','10 Rue Trefilerie, 42100 Saint-etienne','NORMAL');
-INSERT INTO COLLECTE VALUES (11,'15-01-2023','15-02-2023','30, Faculte des Sciences de Montpellier, Place E. Bataillon, 34095 Montpellier','URGENT');
-
+INSERT INTO COLLECTE VALUES (11,'01-01-2023','30-01-2023','30, Faculte des Sciences de Montpellier, Place E. Bataillon, 34095 Montpellier','URGENT');
+INSERT INTO COLLECTE VALUES (12,'10-12-2022','31-12-2022','22 Av. President Doumer, 66000 Perpignan','NORMAL');
 
 prompt ------------------------------------------;
 prompt ----------   insertion DON    ------------;
@@ -125,6 +125,9 @@ INSERT INTO DON VALUES (22,400,'NORMAL','20-08-2018',10,9);
 INSERT INTO DON VALUES (23,400,'NORMAL','20-08-2018',11,9);
 INSERT INTO DON VALUES (24,400,'NORMAL','20-08-2018',12,9);
 
+INSERT INTO DON VALUES (25,490,'NORMAL','12-12-2022',6,12);
+INSERT INTO DON VALUES (26,490,'NORMAL','10-12-2022',11,12);
+
 prompt ------------------------------------------;
 prompt ----------  insertion TRAITE  ------------;
 prompt ------------------------------------------;
@@ -143,6 +146,11 @@ INSERT INTO TRAITE VALUES (28,11,10,'18-01-2019','VALIDE','B+');
 INSERT INTO TRAITE VALUES (28,12,10,'15-08-2018','VALIDE','B-');
 INSERT INTO TRAITE VALUES (33,13,6,'14-03-2017','VALIDE','B+');
 INSERT INTO TRAITE VALUES (32,14,7,'02-03-2013','VALIDE','A+');
+INSERT INTO TRAITE VALUES (32,16,7,'02-03-2013','VALIDE','A+');
+
+INSERT INTO TRAITE VALUES (33,25,6,'13-12-2022','VALIDE','B+');
+INSERT INTO TRAITE VALUES (32,26,7,'11-12-2022','VALIDE','A+');
+
 
 prompt ------------------------------------------;
 prompt -------- insertion TRANSFUSION -----------;
