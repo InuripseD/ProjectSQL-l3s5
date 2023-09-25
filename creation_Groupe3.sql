@@ -19,7 +19,7 @@ prompt -------------------------------------------;
 /*
 Table mere pour rassembler les elements en commun entre Donneur,
 Patient et Personnel. Etant donne que les 3 tables filles possedent
-des attributs differents il est judicieux de faire une table mere
+des attributs differents, il est judicieux de faire une table mere
 Personne pour contenir le Nom, le Prenom, la Date de naissance etc...
 */
 CREATE TABLE PERSONNE (
@@ -33,7 +33,7 @@ CREATE TABLE PERSONNE (
 
 /*
 Table fille de Personne, ici on ne stock qu'un email obligatoire
-pour pouvoir envoyer un message au Donneur en cas de non validation
+pour pouvoir envoyer un message au Donneur en cas de Don NON_VALIDE
 du Don lors du Traitement. De plus, etant une table fille de Personne,
 NUM_DONNEUR est une clef etrangere de Personne mais aussi la clef primaire
 de cette table.
@@ -46,8 +46,8 @@ CREATE TABLE DONNEUR (
 );
 
 /*
-De même de Donneur, Patient est une table fille de Personne.
-Ici on ne stock en plus que le GROUPE_SANGUIN pour permettre 
+De même qu'avec Donneur, Patient est une table fille de Personne.
+Ici on ne stock en plus que le GROUPE_SANGUIN pour  
 pouvoir transfuser le bon type de sang lors d'une transfusion.
 */
 CREATE TABLE PATIENT (
@@ -59,7 +59,7 @@ CREATE TABLE PATIENT (
 
 /*
 La table Personnel est une table fille de Personne. Elle contient la fonction
-et l'anciennete. 
+et l'anciennete de chaque Membre du Personnel. 
 */
 CREATE TABLE PERSONNEL (
     NUM_PERSONNEL NUMERIC(10,0),
@@ -71,8 +71,9 @@ CREATE TABLE PERSONNEL (
 
 /*
 Les Hopitaux sont present dans la table car ils hebergent le Personnel pour
-pouvoir Analyser(Traiter) les Dons. Simplement un code d'hopital, un nom et
-une adresse pour les differencier.
+pouvoir Traiter les Dons. Simplement un code d'hopital, un nom et
+une adresse pour les differencier. L'Hopital est aussi present lorsqu'il 
+s'agit de devoir faire des injections.
 */
 CREATE TABLE HOPITAL (
     CODE_HOPITAL NUMERIC(10,0),
@@ -83,7 +84,7 @@ CREATE TABLE HOPITAL (
 
 /*
 Les Collectes sont la pour recolter les dons. Elles ont une date de debut et 
-une date de fin. Une adresse a laquel la collecte prend place et une niveau
+une date de fin. Une adresse a laquel la collecte prend place et un niveau
 d'urgence. Urgent si la Collecte accepte les Dons de mineurs, et Normal si ce
 n'est pas le cas.
 */
@@ -97,10 +98,10 @@ CREATE TABLE COLLECTE (
 );
 
 /*
-Un Don a une ID unique, lorsqu'un Donneur(NUM_D) fait un Don pendant 
-une Collecte(ID_C). Le Don à une quantité de sang donne, une date de 
-don, et un status d'Urgence, urgent si le Donneur est mineur est que la
-Collecte est en status Urgent, et normal si le Donneur est majeur.
+Un Don a une ID unique, est prend place quand Donneur(NUM_D) fait un Don pendant 
+une Collecte(ID_C). Le Don à une quantité de sang, une date de 
+don, et un status d'urgence, URGENT si le Donneur est mineur est que la
+Collecte est en status Urgent, et NORMAL si le Donneur est majeur.
 */
 CREATE TABLE DON (
     ID_DON NUMERIC(10,0),
@@ -116,8 +117,8 @@ CREATE TABLE DON (
 
 /*
 La clef primaire de Traite est le num du Personnel(NUM_PER) qui Traite un Don(ID_D)
-dans un Hopital(CODE_H). Le traitement du don ce fait a une certaine date, et lors
-du Traitement le Personnel dit si le Don est Valide ou Non auquel cas un MSG_Refus 
+dans un Hopital(CODE_H). Le traitement du Don ce fait a une certaine date, et lors
+du Traitement le Personnel dit si le Don est VALIDE ou NON_VALIDE auquel cas un MSG_REFUS 
 est cree. De plus, le groupe sanguin du sang du Don est determine.
 */
 CREATE TABLE TRAITE (
@@ -149,13 +150,14 @@ CREATE TABLE TRANSFUSE (
 );
 
 /*
-Un MSG_REFUS est cree automatiquement lors qu'un Don est Traite puis est determine
-comme non valide. Cette table donne la liste de tous les messages qui sont envoie
-pour au Donneur don leur Don est Non Valide.
+Un MSG_REFUS est cree automatiquement lorsqu'un Don(ID_D) Traite est determine comme NON_VALIDE.
+Cette table donne la liste de tous les messages qui sont envoye au Donneur dont 
+leur Don est NON_VALIDE. (On n'a recopie le mail du Donneur pour mieux similuer l'envoie).
 */
 CREATE TABLE MSG_REFUS (
     ID_MSG NUMERIC(10,0),
     ID_D NUMERIC(10,0),
+    MAIL_DONNEUR VARCHAR(64),
     CONSTRAINT ID_MSG PRIMARY KEY (ID_MSG),
     FOREIGN KEY (ID_D) REFERENCES DON (ID_DON) ON DELETE CASCADE
 );
@@ -168,7 +170,7 @@ prompt -------------------------------------------;
 Ces 3 views sont creees pour permettre le remplissage des tables
 Personne et de ces tables filles en meme temps. Lors de l'insertion
 d'une ligne dans l'une de ces tables, les trigger Insert_[Type_de_Personne] 
-est appele pour completer a la fois la table Personne est la table fille
+sont appelees pour completer a la fois la table Personne est la table fille
 Donneur, Patient ou Personnel. Ainsi on n'insere jamais directement dans 
 Les tables mais plutôt dans ces 3 views, puis les triggers ce charge du reste.
 */
@@ -231,7 +233,7 @@ END;
 /
 
 /*
-Comme mentionne plus haut, ces 3 trigger vont remplire la table Personne
+Comme mentionne plus haut, ces 3 triggers vont remplire la table Personne
 et la table fille associe. 
 */
 CREATE OR REPLACE TRIGGER Insert_donneur
@@ -269,48 +271,62 @@ END Insert_personnel;
 
 /*
 Ce trigger va creer un MSG de Refus lors de l'insertion de Traitement
-de Don NON Valide.
+de Don NON_VALIDE.
 */
 CREATE OR REPLACE TRIGGER Check_valid_don
     AFTER INSERT ON TRAITE
     FOR EACH ROW
 DECLARE
     MSG_INDEX INTEGER;
+    MAIL VARCHAR(64);
 BEGIN
     MSG_INDEX := Get_index_MSG();
+    SELECT EMAIL INTO MAIL FROM DONNEUR WHERE NUM_DONNEUR IN (SELECT NUM_D FROM DON WHERE :NEW.ID_D = ID_DON);
     IF(:NEW.VALIDITE = 'NON_VALIDE') THEN
-       INSERT INTO MSG_REFUS VALUES (MSG_INDEX, :NEW.ID_D);
+       INSERT INTO MSG_REFUS VALUES (MSG_INDEX, :NEW.ID_D, MAIL);
     END IF;
 END Check_valid_don;
 /
 
 /*
-CREATE OR REPLACE PROCEDURE Update_don_validite
+Ctte procedure va mettre a jour la table Traite en mettant les Traitement de Don en mode NON_VALIDE
+s'il sont vieux de plus de 2 mois ou si le don en question a ete Transfuse.
+On remarque ici qu'il n'est pas question d'envoyer de message de refus.
+*/
+CREATE OR REPLACE PROCEDURE Make_non_valide AS
+BEGIN
+    UPDATE TRAITE SET VALIDITE = 'NON_VALIDE' 
+        WHERE (SELECT MONTHS_BETWEEN((SELECT SYSDATE FROM DUAL),DATE_TRAITEMENT) FROM DUAL) > 2 
+        OR TRAITE.ID_D IN (SELECT TRANSFUSE.ID_D FROM TRANSFUSE);
+END;
+/
+
+
+/*
+
+-------------------------------------------;
+------ Requetes/Tests sur la base ---------;
+-------------------------------------------;
+
+prompt --- Procedure pour obtenir la liste des dons qui sont valides est du meme groupe sanguin qu'un patient pour pouvoir lui faire une injection.
+
+CREATE OR REPLACE PROCEDURE Know_transfuse(NUMERO_PATIENT IN NUMERIC(10,0))
 AS
+    CURSOR LesBonsDons IS SELECT * FROM TRAITE WHERE VALIDITE = 'VALIDE' AND TYPE_SANG IN (SELECT GROUPE_SANG FROM PATIENT WHERE NUM_PATIENT = NUMERO_PATIENT);
+    un_don DON%TYPE;
 BEGIN
-    UPDATE TRAITE SET VALIDITE = 'NON_VALIDE' WHERE (SELECT SYSDATE FROM DUAL)- DATE_TRAITEMENT > TO_DATE('00-02-00') AND ID_D NOT IN (SELECT ID_D FROM TRANSFUSE);
-    COMMIT;
+    OPEN LesBonsDons;
+    LOOP
+    FETCH LesBonsDons INTO un_don;
+    DBMS_OUTPUT.PUT_LINE(un_don.ID_DON);
+    EXIT WHEN LesBonsDons%NOTFOUND;
+    END LOOP;
+    CLOSE LesBonsDons;
 END;
 /
-*/
 
-/*
-CREATE OR REPLACE PROCEDURE INSERT_INTO_DONNEUR( 
-    NUMERO PERSONNE.NUM_PERSO%TYPE, 
-    NOM PERSONNE.NOM%TYPE, 
-    PRENOM PERSONNE.PRENOM%TYPE, 
-    CONTACT PERSONNE%TYPE, 
-    AGE PERSONNE%TYPE, 
-    EMAIL DONNEUR.EMAIL%TYPE) IS
-BEGIN
-    INSERT INTO PERSONNE(NUMERO, NOM, PRENOM, CONTACT, AGE);
-    INSERT INTO DONNEUR(NUMERO, EMAIL);
+prompt --- T'entative de Procedure a la place des triggers plus views.
 
-END;
-/
-*/
-
-/*
 CREATE OR REPLACE PROCEDURE Insert_donneur(
     p_nom IN VARCHAR(32), 
     p_prenom IN VARCHAR(32), 
@@ -327,11 +343,6 @@ BEGIN
     COMMIT;
 END;
 /
-
-BEGIN
-    Insert_donneur('Durant','Pierro',0101010212,'12-06-1998','Stagiaire','05-10-2022');
-END;
-/
 */
 
 prompt -------------------------------------------;
@@ -340,12 +351,81 @@ prompt -------------------------------------------;
 
 START remplissage_Groupe3.sql;
 
+prompt -------------------------------------------;
+prompt --- Requetes sur la base de donnees -------;
+prompt -------------------------------------------;
+prompt
+prompt --- Requete avec groupe by. ( On demande le nombre de Dons par Collecte.) ---;
 /*
--------------------------------------------;
--------- Requetes/T sur la base de donnees ----------;
--------------------------------------------;
+L'utilisation d'un left join ecrit qu'il y a un don dan les collecte ou il n'y en a pas.
+C'est pourquoi on a procede comme suivant.
 */
-/*
-START test_Groupe3.sql;
-*/
+
+SELECT ID_COLLECTE, COUNT(*) AS NB_DONS 
+FROM COLLECTE 
+JOIN DON ON ID_COLLECTE = ID_C 
+GROUP BY ID_COLLECTE
+UNION
+SELECT ID_COLLECTE, 0 AS NB_DONS
+FROM COLLECTE WHERE ID_COLLECTE NOT IN ( SELECT ID_COLLECTE 
+                                         FROM COLLECTE 
+                                         JOIN DON ON ID_COLLECTE = ID_C 
+                                         GROUP BY ID_COLLECTE);
+
+prompt --- Requete utilisant une division. (Existe-t-il une collecte ou tous les Donneurs sont alles ?) ---;
+
+SELECT DISTINCT C.ID_COLLECTE
+FROM COLLECTE C
+WHERE NOT EXISTS (SELECT * FROM DONNEUR D 
+                    WHERE NOT EXISTS (SELECT * FROM DON D1
+                                      WHERE C.ID_COLLECTE = D1.ID_C
+                                        AND D1.NUM_D = D.NUM_DONNEUR));
+
+prompt --- Requete utilisant une division. (Existe-t-il une collecte ou tous les Donneurs nommes SANCHEZ sont alles DEPUIS 01-01-2019?) ---;
+
+SELECT DISTINCT C.ID_COLLECTE
+FROM COLLECTE C
+WHERE DATE_DEBUT > TO_DATE('01-01-2019') AND NOT EXISTS (SELECT * FROM DONNEUR D JOIN PERSONNE P ON P.NUM_PERSO = D.NUM_DONNEUR
+                    WHERE P.NOM = 'SANCHEZ' AND NOT EXISTS (SELECT * FROM DON D1
+                                      WHERE C.ID_COLLECTE = D1.ID_C
+                                        AND D1.NUM_D = D.NUM_DONNEUR));
+
+prompt --- Requete contenant deux sous requete. (Nom des Donneurs de la collecte pour laquelle il y a eu le plus de Don.) ---;
+
+SELECT ID_COLLECTE, NUM_D, NOM, PRENOM
+FROM COLLECTE
+JOIN DON ON ID_COLLECTE = ID_C
+JOIN PERSONNE ON NUM_PERSO = ID_DON
+WHERE ID_COLLECTE IN ( SELECT ID_C
+				  FROM DON
+				  GROUP BY ID_C
+				  HAVING COUNT(*) > = ALL (SELECT COUNT(*) 
+                                           FROM DON 
+                                           GROUP BY ID_C) ); 
+
+prompt --- Requete contenant une sous requete correlative. (Pour chaque collecte, le nom du Personnel(s) ayant traité le plus de Don.) ---;
+
+prompt --- On voit ici que pour la collecte d'id 10, on a Diego qui a fait 2 analyses et Louis qui en fait qu'une.
+
+SELECT C1.ID_COLLECTE, P1.NOM, P1.PRENOM, COUNT(*) AS NB_TRAITEMENT
+FROM PERSONNE P1 
+JOIN TRAITE T1 ON P1.NUM_PERSO = T1.NUM_PER
+JOIN DON D1 ON T1.ID_D = D1.ID_DON
+JOIN COLLECTE C1 ON D1.ID_C = C1.ID_COLLECTE
+GROUP BY C1.ID_COLLECTE, P1.NOM, P1.PRENOM;
+
+prompt --- Et donc ici Louis n'est pas mentionne car ce n'est pas celui qui a fait le plus d'analyse pour la collecte numero 10.
+
+SELECT C1.ID_COLLECTE, P1.NOM, P1.PRENOM, COUNT(*) AS NB_TRAITEMENT
+FROM PERSONNE P1 
+JOIN TRAITE T1 ON P1.NUM_PERSO = T1.NUM_PER
+JOIN DON D1 ON T1.ID_D = D1.ID_DON
+JOIN COLLECTE C1 ON D1.ID_C = C1.ID_COLLECTE
+GROUP BY C1.ID_COLLECTE, T1.NUM_PER, P1.NOM, P1.PRENOM
+HAVING COUNT(*) >= ALL (SELECT COUNT(*) 
+                        FROM COLLECTE C2 
+                        JOIN DON D2 ON D2.ID_C = C1.ID_COLLECTE 
+                        JOIN TRAITE T2 ON D2.ID_DON = T2.ID_D 
+                        WHERE C1.ID_COLLECTE = C2.ID_COLLECTE 
+                        GROUP BY T2.NUM_PER);
 
